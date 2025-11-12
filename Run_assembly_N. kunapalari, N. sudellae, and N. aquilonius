@@ -1,0 +1,29 @@
+#! /bin/bash
+#BSUB -J Tetraploid_assembly
+#BSUB -q bigmem
+#BSUB -M 100000 -R "rusage[mem=100000] "
+#BSUB -n 32
+#BSUB -o supernova_output.txt
+#BSUB -e supernova_error.txt		
+
+
+##Neobatrachus_sudellae
+#Step one
+~/supernova run --id=supernova_out --maxreads=2140000000 --fastqs=~/Neobatrachus_sudellae --accept-extreme-coverage --localcores=8 --localmem=500 --nopreflight 1>_log 2>_err
+
+#Step two
+~/supernova mkoutput --style=pseudohap2 --asmdir=supernova_out/outs/assembly --outprefix=Neobatrachus_sudellae
+
+##Neobatrachus_kunapalari
+#Step one
+~/supernova run --id=supernova_out --maxreads=2140000000 --fastqs=~/Neobatrachus_kunapalari --accept-extreme-coverage --localcores=8 --localmem=500 --nopreflight 1>_log 2>_err
+
+#Step two
+~/supernova mkoutput --style=pseudohap2 --asmdir=supernova_out/outs/assembly --outprefix=Neobatrachus_kunapalari
+
+##Neobatrachus_aquilonius
+#Step one
+~/supernova run --id=supernova_out --maxreads=2140000000 --fastqs=~/Neobatrachus_aquinolius --accept-extreme-coverage --localcores=8 --localmem=500 --nopreflight 1>_log 2>_err
+
+#Step two
+~/supernova mkoutput --style=pseudohap2 --asmdir=supernova_out/outs/assembly --outprefix=Neobatrachus_aquilonius
