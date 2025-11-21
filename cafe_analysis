@@ -1,0 +1,29 @@
+#! /bin/bash
+#BSUB -J cafe_base_k1-5
+#BSUB -q multicore20
+#BSUB -M 10000 -R "rusage[mem=10000]"
+#BSUB -n 8
+#BSUB -o cafe_%J.out
+#BSUB -e cafe_%J.err
+
+# ===== user settings (edit these paths only) =====
+# CAFE5 executable
+CAFE_BIN=/path/to/CAFE5/bin/cafe5
+
+# Working directory containing genes.filt.tsv and frogs.14.nwk
+WORKDIR=/path/to/CAFE_workdir
+# ================================================
+
+module load CAFE5/v5.0.0
+
+cd "${WORKDIR}" || { echo "Cannot cd to ${WORKDIR}"; exit 1; }
+
+# ---- base model (no -k) ----
+"${CAFE_BIN}" -i genes.filt.tsv -t frogs.14.nwk -p -o base_filt
+
+# ---- k = 1–5 models ----
+for k in 1 2 3 4 5; do
+    out="k${k}_filt"
+    echo "Running CAFE5 with k=${k} -> ${out}"
+    "${CAFE_BIN}" -i genes.filt.tsv -t frogs.nwk -p -k "${k}" -o "${out}"
+done
